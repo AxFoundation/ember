@@ -1,0 +1,115 @@
+# ember canonical detector configuration
+#
+# Detector parameters of the ember simulation chain (and of abstrax's processing when ember is
+# imported). Resolved at runtime via the `detector://` URLConfig protocol,
+# e.g. `detector://n_tpc_pmts`. The simulation uses the drift map, not drift_velocity_liquid.
+#
+# One detector protocol for ember and abstrax: importing ember makes abstrax's `detector://`
+# read this file. Keys marked [shared] also appear in abstrax/config/detector.yaml and must have
+# the same values there (checked by tests/unit/test_detector_config.py); change them in both files.
+#
+# Values below describe an XLZD-like TPC (XLZD design book, arXiv:2410.17137): 3 m height and diameter,
+# 1000 + 1000 3" PMTs, 100 V/cm drift field, 7 kV/cm extraction field in the gas, SE gain 50 PE/e-.
+# All other values are the earlier XENONnT-like defaults (fuse comparison values).
+# Coordinate system: gate electrode at z = 0, z points upwards, units are cm.
+#
+# Changing a value here does NOT change the lineage hash of the plugins (strax hashes the
+# URL string, not the value). Bump the __version__ of the affected plugins or delete the
+# cached data. See CLAUDE.md, "Lineage caveat".
+
+# --- PMT arrays -------------------------------------------------------------------------
+n_tpc_pmts: 2000                  # total channels in the main TPC  [shared]
+n_top_pmts: 1000                  # top array  [shared]
+n_bottom_pmts: 1000                # bottom array  [shared]
+top_pmt_indices: [0, 1000]        # half-open [start, stop)  [shared]
+bottom_pmt_indices: [1000, 2000]  # [shared]
+
+# --- Geometry [cm] ----------------------------------------------------------------------
+tpc_radius: 150.0                 # radius of the sensitive volume  [shared]
+z_gate: 0.0                       # bottom of the gate electrode
+z_cathode: -300.0                 # top of the cathode electrode
+tpc_length: 300.0                 # cm, z_gate - z_cathode (drift length, used by abstrax)  [shared]
+z_bottom_pmts: -306.004           # top surface of the bottom PMT windows (6.004 cm below the cathode)
+z_liquid_level: 0.5116            # liquid-gas interface (gate-anode distance 0.8104 - gas gap 0.2988)
+z_anode: 0.8104                   # bottom of the anode electrode, upper end of the electroluminescence gap
+z_top_pmts: 7.3936                # top PMT windows, upper end of the gas phase
+
+# --- Xenon properties -------------------------------------------------------------------
+xenon_density_liquid: 2.81        # g/cm3, used by NEST
+xenon_density_gas: 0.0177         # g/cm3, used by NEST
+w_value_ev: 13.7                  # eV per quantum, used to estimate ER energies from given quanta  [shared]
+liquid_temperature: 177.15        # K, used for the NEST drift velocity (later stage)
+gas_pressure: 1.89                # bar, used for the NEST drift velocity (later stage)
+lxe_dielectric_constant: 1.96     # relative permittivity of LXe, field in the gas = 1.96 x field in the liquid
+
+# --- Optical properties (optical toy Monte Carlo in map_generators/) ----------------------
+# Best-fit set "SR1 normalized g1, timing included" of K. Böse, PhD thesis, Heidelberg University
+# (2026), Table 4.9. This set reproduces the measured top-bottom S1 timing of XENONnT.
+lxe_refractive_index: 1.63
+lxe_rayleigh_scattering_length: 32.0   # cm
+lxe_absorption_length: 1245.0          # cm
+gxe_absorption_length: 1245.0          # cm, set to the liquid value as in Böse, Sec. 4.3.3
+ptfe_reflectivity_liquid: 1.0
+ptfe_reflectivity_gas: 0.8013
+pmt_photocathode_diameter: 6.4         # cm, effective photocathode of a 3" PMT (Hamamatsu R11410)
+pmt_diameter: 7.62                     # cm, outer diameter of a 3" PMT, used for the PMT layout
+
+# --- Signal parameters ------------------------------------------------------------------
+# g1 is the XENONnT SR0 value. g2 is chosen for a single electron gain of 50 PE/e- (XLZD-like) with the
+# unchanged extraction efficiency of 80 % (XENONnT SR0: g2 = 16.5 PE/e-, SE gain 31.2 PE/e-, arXiv:2207.11330).
+# The single electron gain used by SecondaryScintillation is g2 / electron_extraction_efficiency.
+drift_field: 100.0                # V/cm, value of the constant dummy field map
+drift_velocity_liquid: 1.3368e-04 # cm/ns, NEST at drift_field, used by abstrax  [shared]
+electron_lifetime_liquid: 20000000.0  # ns (20 ms), electron lifetime in the liquid  [shared]
+g1: 0.151                         # PE per photon produced  [shared]
+g2: 40.0                          # PE per electron produced  [shared]
+electron_extraction_efficiency: 0.8
+
+# --- Electron drift above the gate and extraction (S2 simulation) -------------------------
+# Field in the liquid between gate and liquid surface: 7.0 kV/cm in the gas (XLZD-like) divided by
+# lxe_dielectric_constant. drift_time_gate and diffusion_constant_longitudinal_gate follow from NEST at this
+# field (computed in map_generators/dummy_field_maps.ipynb, checked by a unit test).
+extraction_field_liquid: 3571.4   # V/cm (7000 V/cm in the gas)
+drift_time_gate: 1921.9           # ns, gate to liquid surface (NEST drift velocity 2.662 mm/us)
+diffusion_constant_longitudinal_gate: 8.685e-09  # cm2/ns, NEST D_L at the extraction field
+electron_trapping_time: 140.0     # ns, mean delay of the extraction at the liquid surface (fuse public config)
+
+# --- Electroluminescence in the gas (S2 simulation) ---------------------------------------
+singlet_fraction_gas: 0.35        # fraction of singlet excimers (fuse public config)
+singlet_lifetime_gas: 5.88        # ns
+triplet_lifetime_gas: 100.1       # ns
+s2_mean_area_fraction_top: 0.8    # S2 light fraction on the top array, used for the dummy S2 pattern map
+
+# --- PMTs and digitizer (S1 / S2 photon propagation) --------------------------------------
+p_double_pe_emission: 0.219       # probability that a detected photon releases two photoelectrons
+s1_detection_efficiency: 1.0      # global scaling of the S1 light collection efficiency
+pmt_transit_time_mean: 46.0       # ns, photocathode to first dynode
+pmt_transit_time_spread: 9.0      # ns, FWHM of the transit time
+pmt_to_pe: 0.005                  # PE per ADC count (same as abstrax's fake gain model)  [shared]
+disabled_pmt_channels: []         # channels that are switched off (gain 0)
+digitizer_bits: 14
+digitizer_voltage_range: 2.25     # V
+pmt_circuit_load_resistor: 8.010882825e-09  # fuse name; not a resistor but R * e / 1 ns = 50 Ohm * e / 1 ns,
+                                            # converts a PMT current in electrons/ns to volts
+
+# --- PMT response and DAQ (raw_records) -------------------------------------------------
+# XENONnT-like CAEN V1724 digitizer values (as in fuse's SR1 simulation config).
+sample_duration: 10              # ns per digitizer sample
+samples_before_pulse_center: 2   # SPE template samples before the photon time
+samples_after_pulse_center: 20   # SPE template samples after the photon time
+samples_to_store_before: 50      # used (x2) to merge photons of one channel into one pulse window
+samples_to_store_after: 50
+pmt_pulse_time_rounding: 1       # ns, sub-sample resolution of the SPE templates (must be 1)
+pmt_pulse_smearing_sigma: 3.0     # ns, Gaussian smearing of the SPE pulse by the readout chain
+                                 # (map_generators/dummy_pmt_pulse.ipynb; rerun it after changing it)
+external_amplification: 10       # amplifier gain between PMT and digitizer
+digitizer_reference_baseline: 16000  # ADC counts
+zle_threshold: 15                # ADC counts below the baseline for the zero-length encoding
+trigger_window: 50               # samples stored before and after a ZLE threshold crossing
+special_thresholds: {}           # {channel: zle_threshold} overrides
+enable_noise: true
+noise_sigma: 2.0                 # ADC counts, white Gaussian noise of the dummy noise file
+                                 # (map_generators/dummy_noise.ipynb; rerun it after changing sigma)
+enable_pmt_afterpulses: true
+pmt_ap_modifier: 1.0             # scales the afterpulse probability
+pmt_ap_t_modifier: 0.0           # ns, subtracted from the afterpulse delay

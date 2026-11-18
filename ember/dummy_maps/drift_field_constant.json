@@ -1,0 +1,32 @@
+{
+ "name": "drift_field_constant",
+ "description": "Constant drift field of 23.0 V/cm in the whole liquid xenon volume.",
+ "coordinate_system": [
+  [
+   "r",
+   [
+    0.0,
+    66.4,
+    2
+   ]
+  ],
+  [
+   "z",
+   [
+    -154.6555,
+    0.5116,
+    2
+   ]
+  ]
+ ],
+ "map": [
+  [
+   23.0,
+   23.0
+  ],
+  [
+   23.0,
+   23.0
+  ]
+ ]
+}
