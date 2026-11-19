@@ -30,7 +30,14 @@ ember/
 └── tests/unit/                 unit tests (pytest + hypothesis)
 ```
 
-## Quick start
+# Simulation overview:
+
+The subsequent image shows the simulation step ember currently enables. The exact output is controlled via the provided dummy maps and NEST parameter defaults.
+
+![ember simulation overview](tutorials/ember_overview.png)
+
+
+# Quick start
 
 The default simulation config can be found in `config/detector.yaml`. It is a XENONnT/LZ sized detector (O(500), 1.5 m in diameter and height). A second file in `configs/xlzd_like_detector.yaml` can be used to change the simulation config to a XLZD-sized detector (O(2000) PMTs, 3 m in diameter and height). The simulation will always use the inputs from the `detector.yaml`, so if you want to switch just rename the file. In addition to the config file the simulation also requires a number of input maps. The repository contains some ipynb in `map_generators` to generate dummy inputs which should give some reasonable starting point. If you want to change the default detector you need to run the notebooks to regenerate the respective inputs, e.g. making sure that the pattern maps have the correct number of channels. The notebooks are loading the settings from `config/detector.yaml` to keep map generation and detector config consistent.
 
