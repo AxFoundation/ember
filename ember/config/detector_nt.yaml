@@ -8,9 +8,7 @@
 # read this file. Keys marked [shared] also appear in abstrax/config/detector.yaml and must have
 # the same values there (checked by tests/unit/test_detector_config.py); change them in both files.
 #
-# Values below describe an XLZD-like TPC (XLZD design book, arXiv:2410.17137): 3 m height and diameter,
-# 1000 + 1000 3" PMTs, 100 V/cm drift field, 7 kV/cm extraction field in the gas, SE gain 50 PE/e-.
-# All other values are the earlier XENONnT-like defaults (fuse comparison values).
+# Values below are XENONnT-like defaults, chosen so that ember can be compared with fuse.
 # Coordinate system: gate electrode at z = 0, z points upwards, units are cm.
 #
 # Changing a value here does NOT change the lineage hash of the plugins (strax hashes the
@@ -18,18 +16,18 @@
 # cached data. See CLAUDE.md, "Lineage caveat".
 
 # --- PMT arrays -------------------------------------------------------------------------
-n_tpc_pmts: 2000                  # total channels in the main TPC  [shared]
-n_top_pmts: 1000                  # top array  [shared]
-n_bottom_pmts: 1000                # bottom array  [shared]
-top_pmt_indices: [0, 1000]        # half-open [start, stop)  [shared]
-bottom_pmt_indices: [1000, 2000]  # [shared]
+n_tpc_pmts: 494                   # total channels in the main TPC  [shared]
+n_top_pmts: 253                   # top array  [shared]
+n_bottom_pmts: 241                # bottom array  [shared]
+top_pmt_indices: [0, 253]         # half-open [start, stop)  [shared]
+bottom_pmt_indices: [253, 494]  # [shared]
 
 # --- Geometry [cm] ----------------------------------------------------------------------
-tpc_radius: 150.0                 # radius of the sensitive volume  [shared]
+tpc_radius: 66.4                  # radius of the sensitive volume  [shared]
 z_gate: 0.0                       # bottom of the gate electrode
-z_cathode: -300.0                 # top of the cathode electrode
-tpc_length: 300.0                 # cm, z_gate - z_cathode (drift length, used by abstrax)  [shared]
-z_bottom_pmts: -306.004           # top surface of the bottom PMT windows (6.004 cm below the cathode)
+z_cathode: -148.6515              # top of the cathode electrode
+tpc_length: 148.6515              # cm, z_gate - z_cathode (drift length, used by abstrax)  [shared]
+z_bottom_pmts: -154.6555          # top surface of the bottom PMT windows
 z_liquid_level: 0.5116            # liquid-gas interface (gate-anode distance 0.8104 - gas gap 0.2988)
 z_anode: 0.8104                   # bottom of the anode electrode, upper end of the electroluminescence gap
 z_top_pmts: 7.3936                # top PMT windows, upper end of the gas phase
@@ -55,23 +53,23 @@ pmt_photocathode_diameter: 6.4         # cm, effective photocathode of a 3" PMT 
 pmt_diameter: 7.62                     # cm, outer diameter of a 3" PMT, used for the PMT layout
 
 # --- Signal parameters ------------------------------------------------------------------
-# g1 is the XENONnT SR0 value. g2 is chosen for a single electron gain of 50 PE/e- (XLZD-like) with the
-# unchanged extraction efficiency of 80 % (XENONnT SR0: g2 = 16.5 PE/e-, SE gain 31.2 PE/e-, arXiv:2207.11330).
+# g1 is the XENONnT SR0 value. g2 and the extraction efficiency are ember's own choices and differ
+# on purpose from XENONnT SR0 (g2 = 16.5 PE/e-, extraction 53 %, SE gain 31.2 PE/e-, arXiv:2207.11330).
 # The single electron gain used by SecondaryScintillation is g2 / electron_extraction_efficiency.
-drift_field: 100.0                # V/cm, value of the constant dummy field map
-drift_velocity_liquid: 1.3368e-04 # cm/ns, NEST at drift_field, used by abstrax  [shared]
+drift_field: 23.0                 # V/cm, value of the constant dummy field map
+drift_velocity_liquid: 6.26e-05   # cm/ns, NEST at drift_field, used by abstrax  [shared]
 electron_lifetime_liquid: 20000000.0  # ns (20 ms), electron lifetime in the liquid  [shared]
 g1: 0.151                         # PE per photon produced  [shared]
-g2: 40.0                          # PE per electron produced  [shared]
+g2: 30.0                          # PE per electron produced  [shared]
 electron_extraction_efficiency: 0.8
 
 # --- Electron drift above the gate and extraction (S2 simulation) -------------------------
-# Field in the liquid between gate and liquid surface: 7.0 kV/cm in the gas (XLZD-like) divided by
-# lxe_dielectric_constant. drift_time_gate and diffusion_constant_longitudinal_gate follow from NEST at this
+# Field in the liquid between gate and liquid surface: XENONnT SR0, PRL 129, 161805 (2022),
+# arXiv:2207.11330. drift_time_gate and diffusion_constant_longitudinal_gate follow from NEST at this
 # field (computed in map_generators/dummy_field_maps.ipynb, checked by a unit test).
-extraction_field_liquid: 3571.4   # V/cm (7000 V/cm in the gas)
-drift_time_gate: 1921.9           # ns, gate to liquid surface (NEST drift velocity 2.662 mm/us)
-diffusion_constant_longitudinal_gate: 8.685e-09  # cm2/ns, NEST D_L at the extraction field
+extraction_field_liquid: 2900.0   # V/cm
+drift_time_gate: 1984.2           # ns, gate to liquid surface (NEST drift velocity 2.578 mm/us)
+diffusion_constant_longitudinal_gate: 9.147e-09  # cm2/ns, NEST D_L at the extraction field
 electron_trapping_time: 140.0     # ns, mean delay of the extraction at the liquid surface (fuse public config)
 
 # --- Electroluminescence in the gas (S2 simulation) ---------------------------------------
