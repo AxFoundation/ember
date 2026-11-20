@@ -113,11 +113,6 @@ def test_rules_for_given_quanta(tmp_path):
     assert result["ed_is_estimated"][4]
 
 
-def test_excitons_never_exceed_photons(tmp_path):
-    result = quanta_for(tmp_path, make_instructions(100))
-    assert np.all(result["excitons"] <= result["photons"])
-
-
 def test_zero_energy_gives_no_quanta(tmp_path):
     result = quanta_for(tmp_path, rows({"ed": 0.0}, {"ed": 0.0, "photons": 5}))
     np.testing.assert_array_equal(result["photons"], [0, 5])

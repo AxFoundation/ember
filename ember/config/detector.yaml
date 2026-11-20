@@ -57,7 +57,7 @@ pmt_diameter: 7.62                     # cm, outer diameter of a 3" PMT, used fo
 # on purpose from XENONnT SR0 (g2 = 16.5 PE/e-, extraction 53 %, SE gain 31.2 PE/e-, arXiv:2207.11330).
 # The single electron gain used by SecondaryScintillation is g2 / electron_extraction_efficiency.
 drift_field: 100                  # V/cm, value of the constant dummy field map
-drift_velocity_liquid: 6.26e-05   # cm/ns, NEST at drift_field, used by abstrax  [shared]
+drift_velocity_liquid: 1.3368e-4   # cm/ns, NEST at drift_field, used by abstrax  [shared]
 electron_lifetime_liquid: 20000000.0  # ns (20 ms), electron lifetime in the liquid  [shared]
 g1: 0.151                         # PE per photon produced  [shared]
 g2: 30.0                          # PE per electron produced  [shared]

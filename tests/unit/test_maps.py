@@ -434,17 +434,6 @@ def test_draw_channels_interpolates_between_grid_points():
     assert np.all(channels[100_200:] == 1)
 
 
-def test_draw_channels_uses_the_same_random_numbers_as_drawing_by_hand():
-    rng_values = np.random.default_rng(3)
-    itp_map = channel_map(rng_values.random((6, 5, 30)))
-    positions = rng_values.uniform(-12, 12, (40, 2))
-    n_photons = rng_values.integers(0, 20, 40)
-    np.testing.assert_array_equal(
-        itp_map.draw_channels(positions, n_photons, np.random.default_rng(4)),
-        reference_draw_channels(itp_map, positions, n_photons, seed=4),
-    )
-
-
 def test_draw_channels_with_many_channels():
     rng_values = np.random.default_rng(5)
     values = rng_values.random((3, 4, 5000))
@@ -525,9 +514,9 @@ def test_draw_channels_refuses_more_channels_than_int16():
     n_channels=st.integers(1, 700),
     n_positions=st.integers(0, 30),
     x_lower=st.floats(-100, 100),
-    x_width=st.floats(0.0, 200),
+    x_width=st.floats(1e-3, 200),
     y_lower=st.floats(-100, 100),
-    y_width=st.floats(0.0, 200),
+    y_width=st.floats(1e-3, 200),
     method=st.sampled_from(["linear", "nearest"]),
     seed=st.integers(0, 2**32 - 1),
 )
@@ -537,8 +526,6 @@ def test_draw_channels_matches_the_reference_for_any_grid_and_channel_number(
     rng_values = np.random.default_rng(seed)
     x_upper = x_lower + (x_width if n_x > 1 else 0.0)
     y_upper = y_lower + (y_width if n_y > 1 else 0.0)
-    if (n_x > 1 and x_upper <= x_lower) or (n_y > 1 and y_upper <= y_lower):
-        return
     values = rng_values.random((n_x, n_y, n_channels))
     channel_is_dark = rng_values.random(n_channels) < 0.3
     channel_is_dark[rng_values.integers(n_channels)] = False

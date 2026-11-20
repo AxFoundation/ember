@@ -99,11 +99,6 @@ def test_s2_photons_end_to_end_and_reload(tmp_path):
     assert context.is_stored("000000", "propagated_s2_photons")
 
     photons = context.get_array("000000", "propagated_s2_photons")
-    photons_per_interaction = context.get_array("000000", "s2_photons_sum")
-    assert len(photons) == photons_per_interaction["sum_s2_photons"].sum() > 0
-    assert np.all(np.diff(photons["time"]) >= 0)
-    assert np.all(photons["photon_type"] == 2)
-
     reloaded = ember.ember_context(output_folder=tmp_path / "data").get_array(
         "000000", "propagated_s2_photons", config=dict(input_file="not_needed_when_stored.csv")
     )

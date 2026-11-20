@@ -162,7 +162,7 @@ def test_smearing_rejects_negative_sigma_and_uneven_times():
 @settings(deadline=None, max_examples=30)
 @given(scale=st.floats(2.0, 15.0), sigma=st.floats(0.3, 0.7), smearing=st.floats(0.5, 6.0))
 def test_smearing_keeps_area_and_mean_time(scale, sigma, smearing):
-    times = np.arange(-100, 300, 0.05)
+    times = np.arange(-100, 1000, 0.05)
     pulse = lognormal_pulse_shape(times, scale, sigma)
     smeared = smear_pulse_shape(times, pulse, smearing)
     assert smeared.sum() == pytest.approx(pulse.sum(), rel=1e-6)

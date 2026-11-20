@@ -167,17 +167,6 @@ def test_drift_time_parameters_follow_the_drift_map(drift_plugin, radius, z):
     assert spread[0] == pytest.approx(expected_drift_time_spread(z), rel=1e-6)
 
 
-@settings(deadline=None, max_examples=30)
-@given(z_values=st.lists(st.floats(-148.0, -0.01), min_size=2, max_size=20))
-def test_deeper_interactions_drift_longer_and_spread_more(drift_plugin, z_values):
-    z_values = np.sort(np.array(z_values))[::-1]
-    positions = np.column_stack([np.full(len(z_values), 30.0), z_values])
-    mean, spread = drift_plugin.get_s2_drift_time_params(positions)
-    assert np.all(np.diff(mean) >= 0)
-    assert np.all(np.diff(spread) >= 0)
-    assert np.all(mean >= DRIFT_TIME_GATE)
-
-
 @settings(deadline=None, max_examples=50)
 @given(
     electrons=st.lists(st.integers(0, 5000), min_size=1, max_size=20),

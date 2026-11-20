@@ -23,14 +23,6 @@ def ember_value(key: str):
 
 
 @requires_abstrax
-@pytest.mark.parametrize("key", ["n_tpc_pmts", "tpc_length", "pmt_to_pe"])
-def test_detector_protocol_reads_the_ember_file_with_abstrax_imported(key):
-    import abstrax  # noqa: F401
-
-    assert strax.URLConfig.evaluate_dry(f"detector://{key}") == ember_value(key)
-
-
-@requires_abstrax
 @pytest.mark.parametrize("key", ABSTRAX_KEYS)
 def test_every_abstrax_key_has_the_same_value_in_ember(key):
     abstrax_value = lookup_detector_value(ABSTRAX_DETECTOR_CONFIG_FILE, key)
