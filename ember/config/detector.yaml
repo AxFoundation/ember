@@ -56,7 +56,7 @@ pmt_diameter: 7.62                     # cm, outer diameter of a 3" PMT, used fo
 # g1 is the XENONnT SR0 value. g2 and the extraction efficiency are ember's own choices and differ
 # on purpose from XENONnT SR0 (g2 = 16.5 PE/e-, extraction 53 %, SE gain 31.2 PE/e-, arXiv:2207.11330).
 # The single electron gain used by SecondaryScintillation is g2 / electron_extraction_efficiency.
-drift_field: 23.0                 # V/cm, value of the constant dummy field map
+drift_field: 100                  # V/cm, value of the constant dummy field map
 drift_velocity_liquid: 6.26e-05   # cm/ns, NEST at drift_field, used by abstrax  [shared]
 electron_lifetime_liquid: 20000000.0  # ns (20 ms), electron lifetime in the liquid  [shared]
 g1: 0.151                         # PE per photon produced  [shared]
@@ -64,12 +64,11 @@ g2: 30.0                          # PE per electron produced  [shared]
 electron_extraction_efficiency: 0.8
 
 # --- Electron drift above the gate and extraction (S2 simulation) -------------------------
-# Field in the liquid between gate and liquid surface: XENONnT SR0, PRL 129, 161805 (2022),
 # arXiv:2207.11330. drift_time_gate and diffusion_constant_longitudinal_gate follow from NEST at this
 # field (computed in map_generators/dummy_field_maps.ipynb, checked by a unit test).
-extraction_field_liquid: 2900.0   # V/cm
-drift_time_gate: 1984.2           # ns, gate to liquid surface (NEST drift velocity 2.578 mm/us)
-diffusion_constant_longitudinal_gate: 9.147e-09  # cm2/ns, NEST D_L at the extraction field
+extraction_field_liquid: 3571.4   # V/cm (7000 V/cm in the gas)
+drift_time_gate: 1921.9           # ns, gate to liquid surface (NEST drift velocity 2.578 mm/us)
+diffusion_constant_longitudinal_gate: 8.685e-09  # cm2/ns, NEST D_L at the extraction field
 electron_trapping_time: 140.0     # ns, mean delay of the extraction at the liquid surface (fuse public config)
 
 # --- Electroluminescence in the gas (S2 simulation) ---------------------------------------
