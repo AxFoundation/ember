@@ -2,11 +2,11 @@
 
 **E**vent **M**odelling **B**ridging **E**nergy deposits and **R**eadout
 
-`ember` is a ligth weight tutorial software for full chain waveform simulations based on the `strax` framework. This software is inspired by XENONnT's `fuse` package, but is meant as a simplified standalone package that can be used as base to build more suffisticated simulation models for other experiments like the planned XLZD experiment.
+`ember` is a ligth weight tutorial software for full chain waveform simulations based on the `strax` framework. This software is inspired by XENONnT's `fuse` package, but is meant as a simplified standalone package that can be used as base to build more sophisticated simulation models for other experiments like the planned XLZD experiment.
 
-`ember` utilizes the strax framework to to build a modular simulation structure that can be easily adjusted according to the users needs. It can be operated together with the `strax` based package `abstrax` which provides a simplified signal reconstruction platform based on XENONnT's reconstruction software `straxen`. `abstrax` follows the same phillosophy as `ember` and works as a standalone tutorial package. It also explains the nature of the `strax` framework and how to use it in more detail. 
+`ember` utilizes the strax framework to to build a modular simulation structure that can be easily adjusted according to the users needs. It can be operated together with the `strax` based package `abstrax` which provides a simplified signal reconstruction platform based on XENONnT's reconstruction software `straxen`. `abstrax` follows the same philosophy as `ember` and works as a standalone tutorial package. It also explains the nature of the `strax` framework and how to use it in more detail. 
 
-`ember` and `abstrax` are not meant as development packages. You can use/fork these packages as starting point for your own project. Please only add bug fixes, or improvments that keep the tutorial nature of these two repositories.
+`ember` and `abstrax` are not meant as development packages. You can use/fork these packages as starting point for your own project. Please only add bug fixes, or improvements that keep the tutorial nature of these two repositories.
 
 When you work with `ember` or `abstrax` please cite [fuse](github.com/XENONnT/fuse) and [straxen](https://github.com/XENONnT/straxen) as reference.
 
@@ -39,7 +39,7 @@ The subsequent image shows the simulation step ember currently enables. The exac
 
 # Quick start
 
-The default simulation config can be found in `config/detector.yaml`. It is a XENONnT/LZ sized detector (O(500), 1.5 m in diameter and height). A second file in `configs/xlzd_like_detector.yaml` can be used to change the simulation config to a XLZD-sized detector (O(2000) PMTs, 3 m in diameter and height). The simulation will always use the inputs from the `detector.yaml`, so if you want to switch just rename the file. In addition to the config file the simulation also requires a number of input maps. The repository contains some ipynb in `map_generators` to generate dummy inputs which should give some reasonable starting point. If you want to change the default detector you need to run the notebooks to regenerate the respective inputs, e.g. making sure that the pattern maps have the correct number of channels. The notebooks are loading the settings from `config/detector.yaml` to keep map generation and detector config consistent.
+The default simulation config can be found in `config/detector.yaml`. It is a XENONnT/LZ sized detector (O(500), 1.5 m in diameter and height). A second file in `configs/xlzd_like_detector.yaml` can be used to change the simulation config to a XLZD-sized detector (O(2000) PMTs, 3 m in diameter and height) (see also the [xlzd branch](https://github.com/AxFoundation/ember/tree/xlzd) where config and maps have already be changed for convenience). The simulation will always use the inputs from the `detector.yaml`, so if you want to switch just rename the file. In addition to the config file the simulation also requires a number of input maps. The repository contains some ipynb in `map_generators` to generate dummy inputs which should give some reasonable starting point. If you want to change the default detector you need to run the notebooks to regenerate the respective inputs, e.g. making sure that the pattern maps have the correct number of channels. The notebooks are loading the settings from `config/detector.yaml` to keep map generation and detector config consistent.
 
 Small disclaimer: The code was ported with the assitance of Claude. I could not check everything line-by-line
 
